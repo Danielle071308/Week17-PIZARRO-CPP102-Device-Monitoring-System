@@ -187,3 +187,38 @@ def display_summary(readings):
     print(f"CRITICAL : {critical_count} ({critical_percentage:.2f}%)")
     print()
     print(f"Overall Status: {overall_status}")
+
+def display_menu():
+    """Display the main menu."""
+    print("\nSIMULATED DEVICE MONITORING SYSTEM")
+    print("----------------------------------")
+    print("[1] View Readings")
+    print("[2] Add Reading")
+    print("[3] Classify Readings")
+    print("[4] Generate Summary")
+    print("[5] Exit")
+
+def main():
+    """Run the menu loop and coordinate the program functions."""
+    readings = get_initial_readings()
+
+    while True:
+        display_menu()
+        choice = input("\nEnter choice: ")
+
+        if choice == "1":
+            display_readings(readings)
+        elif choice == "2":
+            add_reading(readings)
+        elif choice == "3":
+            display_classifications(readings)
+        elif choice == "4":
+            display_summary(readings)
+        elif choice == "5":
+            print("Thank you for using the Device Monitoring System.")
+            break
+        else:
+            print("Invalid choice. Please enter a number from 1 to 5.")
+
+if __name__ == "__main__":
+    main()
