@@ -106,3 +106,84 @@ def find_maximum(readings):
             maximum = reading
 
     return maximum
+
+def count_category(readings, warning_limit, critical_limit, category):
+    """Count how many readings belong to the requested category."""
+    count = 0
+
+    for reading in readings:
+        current_category = classify_reading(
+            reading, warning_limit, critical_limit
+        )
+
+        if current_category == category:
+            count = count + 1
+
+    return count
+
+def determine_overall_status(warning_count, critical_count):
+    """Return the overall status, checking critical readings first."""
+    if critical_count >= 1:
+        return "ATTENTION REQUIRED"
+    elif warning_count >= 1:
+        return "MONITOR"
+    else:
+        return "NORMAL"
+
+def display_readings(readings):
+    """Display every reading with its position."""
+    print("\nCURRENT READINGS")
+    print("----------------")
+
+    for index in range(len(readings)):
+        reading_number = index + 1
+        temperature = readings[index]
+        print(f"Reading {reading_number}: {temperature} °C")
+
+def display_classifications(readings):
+    """Display each reading and its classification."""
+    print("\nREADING CLASSIFICATION")
+    print("----------------------")
+
+    for reading in readings:
+        category = classify_reading(reading, 30, 35)
+        print(f"{reading} °C -> {category}")
+
+def display_summary(readings):
+    """Compute and display the numerical and classification summary."""
+    if len(readings) == 0:
+        print("No readings are available.")
+        return
+
+    number_of_readings = len(readings)
+    total = compute_total(readings)
+    average = total / number_of_readings
+    minimum = find_minimum(readings)
+    maximum = find_maximum(readings)
+
+    # Count the readings in each category.
+    normal_count = count_category(readings, 30, 35, "NORMAL")
+    warning_count = count_category(readings, 30, 35, "WARNING")
+    critical_count = count_category(readings, 30, 35, "CRITICAL")
+
+    normal_percentage = normal_count / number_of_readings * 100
+    warning_percentage = warning_count / number_of_readings * 100
+    critical_percentage = critical_count / number_of_readings * 100
+
+    overall_status = determine_overall_status(
+        warning_count, critical_count
+    )
+
+    print("\nMONITORING SUMMARY")
+    print("------------------")
+    print(f"Number of readings : {number_of_readings}")
+    print(f"Total of readings : {total}")
+    print(f"Average temperature : {average:.2f} °C")
+    print(f"Minimum temperature : {minimum} °C")
+    print(f"Maximum temperature : {maximum} °C")
+    print()
+    print(f"NORMAL : {normal_count} ({normal_percentage:.2f}%)")
+    print(f"WARNING : {warning_count} ({warning_percentage:.2f}%)")
+    print(f"CRITICAL : {critical_count} ({critical_percentage:.2f}%)")
+    print()
+    print(f"Overall Status: {overall_status}")
